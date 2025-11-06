@@ -68,42 +68,50 @@ public class AddActivity extends AppCompatActivity {
         groupCovers.check(R.id.btnCoverFantasy);
     }
 
+    // Metodo para guardar un nuevo libro.
     private void saveNewBook() {
-        // 1. Leer datos de las vistas [cite: 146]
+        // Leemos los datos introducidos para el titulo y autor del libro.
         String title = etTitle.getText().toString().trim();
         String author = etAuthor.getText().toString().trim();
 
-        // 2. Validación de errores (campos obligatorios) [cite: 138]
+        // Obligamos a que el titulo y el autor no estén vacíos.
         if (title.isEmpty() || author.isEmpty()) {
+            // Si alguno de los campos está vacío mostramos un mensaje en un Toast.
             Toast.makeText(this, "Título y Autor son obligatorios", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Leemos los datos introducidos para el estado y guardamos como String el que esta seleccionado.
         String status = spStatus.getSelectedItem().toString();
-        // El slider devuelve float, lo convertimos a Integer
+        // Leemos el rating del libro y lo guardamos como Integer.
+        // Nos devuelve float asi que lo casteamos a Integer.
         Integer rating = (int) sliderRating.getValue();
-        // Si el rating es 0, lo guardamos como null (según la BBDD de ejemplo)
+        // Si rating vale 0 devolvemos null imitando los datos introducidos con Utils.getSampleBooks().
         if (rating == 0) {
             rating = null;
         }
 
-        boolean isFavorite = switchFavorite.isChecked();
-        int imageResource = getSelectedImageResource();
+        // Leemos el favorito del libro y lo guardamos como boolean.
+        boolean isFavorite = switchFavorite.isChecked(); // Comprueba si está checkeado y devuelve un booleano en función de eso.
 
-        // 3. Guardar en BBDD [cite: 147]
-        realm.beginTransaction(); // [cite: 927]
-        Book newBook = new Book(title, author, status, rating, imageResource, isFavorite);
-        realm.copyToRealm(newBook); // [cite: 929]
-        realm.commitTransaction(); // [cite: 930]
+        // Leemos el género del libro y lo guardamos como Integer.
+        int imageResource = getSelectedImageResource(); //
 
-        // 4. Volver a MainActivity [cite: 103]
-        finish();
+        // Guardar en BBDD.
+        realm.beginTransaction(); // Iniciamos la transacción.
+        Book newBook = new Book(title, author, status, rating, imageResource, isFavorite); // Creamos un nuevo libro con los datos introducidos.
+        realm.copyToRealm(newBook); // Guardamos el libro en la BBDD.
+        realm.commitTransaction(); // Hacemos el commit de la transacción para actualizar los datos en BBDD.
+
+        finish(); // Cerramos el activity actual.
     }
 
-    // Metodo helper para obtener el drawable del ToggleGroup.
+    // Metodo para obtener el drawable del ToggleGroup.
     private int getSelectedImageResource() {
+        // Recogemos el id del botón seleccionado.
         int checkedId = groupCovers.getCheckedButtonId();
 
+        // Comprobamos el id del botón seleccionado y devolvemos el drawable correspondiente.
         if (checkedId == R.id.btnCoverFantasy) {
             return R.drawable.fantasy;
         } else if (checkedId == R.id.btnCoverScifi) {
@@ -117,7 +125,8 @@ public class AddActivity extends AppCompatActivity {
         } else if (checkedId == R.id.btnCoverMistery) {
             return R.drawable.mistery;
         }
-        // Devuelve fantasía por defecto si algo falla.
+
+        // Si algo falla devolvemos la imagen por defecto (fantasía).
         return R.drawable.fantasy;
     }
 
