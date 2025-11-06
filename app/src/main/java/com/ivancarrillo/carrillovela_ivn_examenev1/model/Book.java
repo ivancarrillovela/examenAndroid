@@ -12,7 +12,7 @@ public class Book extends RealmObject {
     private String nombre;
     private String autor;
     private String estado;
-    private Integer rating; // Usamos Integer (objeto) para permitir nulos
+    private int rating;
     private int imagen;
     private boolean esFavorito;
 
@@ -25,7 +25,9 @@ public class Book extends RealmObject {
         this.nombre = nombre;
         this.autor = autor;
         this.estado = estado;
-        this.rating = rating;
+        // En rating como parametro uso el objeto Integer para permitir nulos
+        // Despues uso un ternario para asegurarme de que si es nulo guarde 0.
+        this.rating = rating == null ? 0 : rating;
         this.imagen = imagen;
         this.esFavorito = esFavorito;
     }

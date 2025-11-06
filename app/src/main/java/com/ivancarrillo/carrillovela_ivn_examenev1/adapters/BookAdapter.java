@@ -16,15 +16,15 @@ import com.ivancarrillo.carrillovela_ivn_examenev1.R;
 import com.ivancarrillo.carrillovela_ivn_examenev1.model.Book;
 
 import java.util.List;
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
 
     private List<Book> bookList;
     private OnItemClickListener clickListener;
     private OnItemLongClickListener longClickListener;
     private Context context;
 
-    // Interfaces para los eventos onClick y onLongClick [cite: 70, 72]
-    // Adaptado del patrón OnItemClickListener de RecyclerView.pdf [cite: 376]
+    // Interfaces para los eventos onClick y onLongClick
+    // Adaptado del patrón OnItemClickListener de RecyclerView.pdf
     public interface OnItemClickListener {
         void onItemClick(Book book);
     }
@@ -42,26 +42,26 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     @NonNull
     @Override
-    public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Enlazamos con el item_book.xml [cite: 327]
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
-        return new BookViewHolder(view);
+        return new BookHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull BookHolder holder, int position) {
         Book book = bookList.get(position);
-        // Llamamos al metodo bind (assignData en el PDF)
-        holder.bind(book, clickListener, longClickListener);
+        // Llamamos al metodo assignData
+        holder.assignData(book, clickListener, longClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size(); // [cite: 347]
+        return bookList.size();
     }
 
     // Clase ViewHolder [cite: 310]
-    public class BookViewHolder extends RecyclerView.ViewHolder {
+    public class BookHolder extends RecyclerView.ViewHolder {
 
         ImageView imgCover;
         TextView tvTitle;
@@ -70,9 +70,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         ImageView imgFavorite;
         RatingBar ratingBar;
 
-        public BookViewHolder(@NonNull View itemView) {
+        public BookHolder(@NonNull View itemView) {
             super(itemView);
-            // Enlazamos vistas del item [cite: 314]
+            // Enlazamos vistas del item con el contructor.
             imgCover = itemView.findViewById(R.id.imgCover);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAuthor = itemView.findViewById(R.id.tvAuthor);
@@ -81,30 +81,26 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             ratingBar = itemView.findViewById(R.id.ratingBar);
         }
 
-        // Metodo para asignar datos y listeners [cite: 335]
-        public void bind(final Book book, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener) {
+        // Metodo para asignar datos y listeners.
+        public void assignData(final Book book, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener) {
             tvTitle.setText(book.getNombre());
             tvAuthor.setText(book.getAutor());
             tvStatus.setText(book.getEstado());
             imgCover.setImageResource(book.getImagen());
+            ratingBar.setRating(book.getRating());
 
-            // Gestionar icono favorito
+            // Gestionar icono favorito.
+            // Si el libro es favorito muestra el corazón relleno, si no muestra el corazón vacío.
             if (book.getEsFavorito()) {
                 imgFavorite.setImageResource(R.drawable.heart);
             } else {
                 imgFavorite.setImageResource(R.drawable.heart_empty);
             }
 
-            // Gestionar rating (manejando nulos)
-            if (book.getRating() != null) {
-                ratingBar.setVisibility(View.VISIBLE);
-                ratingBar.setRating(book.getRating());
-            } else {
-                // Ocultamos el RatingBar si el rating es nulo (como en "Juego de Tronos")
-                ratingBar.setVisibility(View.INVISIBLE);
-            }
-
             // Cambiar color del estado
+            // Si el estado es "Leído" muestra el color verde.
+            // Si es "Leyendo" muestra el color amarillo.
+            // Para lo demás muestra el color rojo (es decir cuando es "Pendiente").
             if (book.getEstado().equals("Leído")) {
                 tvStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.read));
             } else if (book.getEstado().equals("Leyendo")) {
@@ -113,7 +109,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 tvStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pending));
             }
 
-            // Asignar evento Click [cite: 401]
+            // Asignar evento Click.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -121,7 +117,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
                 }
             });
 
-            // Asignar evento Long Click (adaptación estándar de Android)
+            // Asignar evento Long Click.
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
