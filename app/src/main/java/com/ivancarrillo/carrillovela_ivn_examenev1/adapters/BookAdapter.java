@@ -43,7 +43,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
     @NonNull
     @Override
     public BookHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Enlazamos con el item_book.xml [cite: 327]
+        // Enlazamos con el item_book.
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_book, parent, false);
         return new BookHolder(view);
     }
@@ -51,18 +51,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
     @Override
     public void onBindViewHolder(@NonNull BookHolder holder, int position) {
         Book book = bookList.get(position);
-        // Llamamos al metodo assignData
+        // Llamamos al metodo assignData.
         holder.assignData(book, clickListener, longClickListener);
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size();
+        return bookList.size(); // Devolvemos el tamaño de la lista.
     }
 
-    // Clase ViewHolder [cite: 310]
+    // Clase Holder para el RecyclerView.
     public class BookHolder extends RecyclerView.ViewHolder {
-
+        // Instanciamos las vistas.
         ImageView imgCover;
         TextView tvTitle;
         TextView tvAuthor;
