@@ -43,23 +43,21 @@ public class MainActivity extends AppCompatActivity {
         bookList = realm.where(Book.class).findAll();
 
         // Configurar Adaptador para el RecyclerView
-        adapter = new BookAdapter(bookList, this,
-                new BookAdapter.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(Book book) {
-                        // Cuando clickamos en un libro cambia su estado
-                        // Utilizamos una llamada a un metodo para cambiar el estado del libro (Pendiente, Leyendo, Leído).
-                        changeBookStatus(book);
-                    }
-                },
-                new BookAdapter.OnItemLongClickListener() {
-                    @Override
-                    public void onItemLongClick(Book book) {
-                        // Cuando hacemos un click largo en un libro cambia su estado favorito
-                        // Utilizamos una llamada a un metodo para cambiar el estado de favorito.
-                        toggleBookFavorite(book);
-                    }
-                });
+        adapter = new BookAdapter(bookList, new BookAdapter.OnBookItemListener() {
+            // Cuando hace click ejecuta el metodo onItemClick.
+            @Override
+            public void onItemClick(Book book) {
+                // Ejecuta el metodo changeBookStatus con el libro como parametro.
+                changeBookStatus(book);
+            }
+
+            // Cuando hace long click ejecuta el metodo onItemLongClick.
+            @Override
+            public void onItemLongClick(Book book) {
+                // Ejecuta el metodo toggleBookFavorite con el libro como parametro.
+                toggleBookFavorite(book);
+            }
+        });
 
         // Configurar RecyclerView
         // Le asignamos un LinearLayoutManager al RecyclerView.

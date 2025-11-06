@@ -18,16 +18,12 @@ import com.ivancarrillo.carrillovela_ivn_examenev1.model.Book;
 import java.util.List;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
 
-    private List<Book> bookList;
-    private OnItemClickListener clickListener;
-    private OnItemLongClickListener longClickListener;
-    private Context context;
+    private List<Book> bookList; // Lista para los libros.
+    private OnBookItemListener listener; // Listener único para los eventos onClick y onLongClick
 
-    public BookAdapter(List<Book> bookList, Context context, OnItemClickListener clickListener, OnItemLongClickListener longClickListener) {
-        this.bookList = bookList;
-        this.context = context;
-        this.clickListener = clickListener;
-        this.longClickListener = longClickListener;
+    public BookAdapter(List<Book> bookList, OnBookItemListener listener) {
+        this.bookList = bookList; // Asignamos la lista de libros.
+        this.listener = listener; // Asignamos el listener único.
     }
 
     @NonNull
@@ -42,7 +38,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
     public void onBindViewHolder(@NonNull BookHolder holder, int position) {
         Book book = bookList.get(position);
         // Llamamos al metodo assignData.
-        holder.assignData(book, clickListener, longClickListener);
+        holder.assignData(book, listener);
     }
 
     @Override
@@ -72,12 +68,17 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
         }
 
         // Metodo para asignar datos y listeners.
-        public void assignData(final Book book, final OnItemClickListener clickListener, final OnItemLongClickListener longClickListener) {
+        public void assignData(final Book book, final OnBookItemListener listener) {
+            // Asignamos los datos cogiendolos del objeto book que recibimos.
             tvTitle.setText(book.getNombre());
             tvAuthor.setText(book.getAutor());
             tvStatus.setText(book.getEstado());
             imgCover.setImageResource(book.getImagen());
             ratingBar.setRating(book.getRating());
+
+            // Necesitamos obtener el contexto de la vista actual para poder buscar
+            // en los resources los colores ya que solo nos devuelven un identidicador y no el color en si.
+            Context context = itemView.getContext();
 
             // Gestionar icono favorito.
             // Si el libro es favorito muestra el corazón relleno, si no muestra el corazón vacío.
@@ -87,43 +88,41 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
                 imgFavorite.setImageResource(R.drawable.heart_empty);
             }
 
-            // Cambiar color del estado
+            // Cambiar color del estado utilizando context para poder
+            // acceder a los recursos con el id que nodevuelve el color.
             // Si el estado es "Leído" muestra el color verde.
             // Si es "Leyendo" muestra el color amarillo.
             // Para lo demás muestra el color rojo (es decir cuando es "Pendiente").
             if (book.getEstado().equals("Leído")) {
-                tvStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.read));
+                tvStatus.setBackgroundColor(ContextCompat.getColor(context,R.color.read));
             } else if (book.getEstado().equals("Leyendo")) {
                 tvStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.reading));
             } else {
                 tvStatus.setBackgroundColor(ContextCompat.getColor(context, R.color.pending));
             }
 
-            // Asignar evento Click.
+            // Asignar evento Click usando el listener único.
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    clickListener.onItemClick(book);
+                    listener.onItemClick(book);
                 }
             });
 
-            // Asignar evento Long Click.
+            // Asignar evento Long Click usando el listener único.
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    longClickListener.onItemLongClick(book);
-                    return true; // Devuelvo true para indicar que el evento ha sido "consumido" y evitar fallos.
+                    listener.onItemLongClick(book);
+                    return true; // Indica que el evento ya se ha consumido para evitar fallos.
                 }
             });
         }
     }
 
-    // Interfaces para los eventos onClick y onLongClick
-    public interface OnItemClickListener {
+    // Interfaz para Click y LongClick
+    public interface OnBookItemListener {
         void onItemClick(Book book);
-    }
-
-    public interface OnItemLongClickListener {
         void onItemLongClick(Book book);
     }
 }
