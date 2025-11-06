@@ -23,16 +23,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
     private OnItemLongClickListener longClickListener;
     private Context context;
 
-    // Interfaces para los eventos onClick y onLongClick
-    // Adaptado del patrón OnItemClickListener de RecyclerView.pdf
-    public interface OnItemClickListener {
-        void onItemClick(Book book);
-    }
-
-    public interface OnItemLongClickListener {
-        void onItemLongClick(Book book);
-    }
-
     public BookAdapter(List<Book> bookList, Context context, OnItemClickListener clickListener, OnItemLongClickListener longClickListener) {
         this.bookList = bookList;
         this.context = context;
@@ -122,9 +112,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookHolder> {
                 @Override
                 public boolean onLongClick(View v) {
                     longClickListener.onItemLongClick(book);
-                    return true; // Importante: consumir el evento
+                    return true; // Devuelvo true para indicar que el evento ha sido "consumido" y evitar fallos.
                 }
             });
         }
+    }
+
+    // Interfaces para los eventos onClick y onLongClick
+    public interface OnItemClickListener {
+        void onItemClick(Book book);
+    }
+
+    public interface OnItemLongClickListener {
+        void onItemLongClick(Book book);
     }
 }

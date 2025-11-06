@@ -15,21 +15,23 @@
 
         <ImageView
             android:id="@+id/imgCover"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="66dp"
+            android:layout_height="69dp"
             android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:src="@drawable/fantasy" />
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_width="243dp"
+            android:layout_height="22dp"
             android:layout_marginStart="12dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/imgFavorite"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/imgCover"
             app:layout_constraintTop_toTopOf="@+id/imgCover"
             tools:text="El nombre del viento" />
@@ -47,8 +49,8 @@
 
         <ImageView
             android:id="@+id/imgFavorite"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="32dp"
+            android:layout_height="34dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/tvTitle"
             tools:src="@drawable/heart" />
@@ -58,29 +60,31 @@
             style="?attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="22dp"
             android:isIndicator="true"
             android:numStars="5"
             android:stepSize="1"
-            app:layout_constraintStart_toStartOf="@+id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@+id/tvAuthor" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imgFavorite" />
 
         <TextView
             android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginTop="6dp"
             android:background="@color/pending"
             android:paddingStart="8dp"
-            android:paddingEnd="8dp"
             android:paddingTop="2dp"
+            android:paddingEnd="8dp"
             android:paddingBottom="2dp"
             android:textColor="@android:color/white"
             android:textSize="12sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/ratingBar"
-            app:layout_constraintStart_toEndOf="@+id/ratingBar"
-            app:layout_constraintTop_toTopOf="@+id/ratingBar"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCover"
+            app:layout_constraintStart_toStartOf="@+id/tvTitle"
+            app:layout_constraintTop_toBottomOf="@+id/tvAuthor"
             tools:text="Leyendo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
